@@ -2,11 +2,11 @@
 
 三幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
 
-[查看统一画廊效果图](docs/gallery.jpg)
+[在线进入赛博盆景](https://landowang.github.io/cyber-bonsai/) · [查看统一画廊效果图](docs/gallery.jpg)
 
 | 龙吟浮樱 | 赤沙镜湖 | 雪满江南 |
 | --- | --- | --- |
-| [![龙吟浮樱](scenes/longyin-garden/preview.jpg)](scenes/longyin-garden/index.html) | [![赤沙镜湖](scenes/sunset-pyramids/preview.jpg)](scenes/sunset-pyramids/index.html) | [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](scenes/snowy-jiangnan/index.html) |
+| [![龙吟浮樱](scenes/longyin-garden/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/longyin-garden/) | [![赤沙镜湖](scenes/sunset-pyramids/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/sunset-pyramids/) | [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/snowy-jiangnan/) |
 | 苍龙、樱花浮岛、双檐凉亭与流水 | 金字塔、落日、湖面倒影与帆船 | 粉墙黛瓦、石拱桥、乌篷船与漫天飞雪 |
 
 ## 打开盆景
@@ -21,7 +21,11 @@ python3 -m http.server 8080 --bind 127.0.0.1
 
 然后打开 <http://127.0.0.1:8080>。在 macOS 上也可以运行 `open index.html`；若嵌入式预览器限制本地文件协议，使用上面的本地服务器。
 
-每个 `scenes/<场景>/index.html` 都是独立成品，内置渲染库、场景代码和样式。复制这一个 HTML 文件即可保存或离线使用。GitHub 的文件页面显示源码；交互效果需要下载后用浏览器打开。
+每个 `scenes/<场景>/index.html` 都是独立成品，内置渲染库、场景代码和样式。复制这一个 HTML 文件即可保存或离线使用。也可以直接访问上面的在线画廊，无需下载。
+
+## 在线发布
+
+网站由 GitHub Pages 托管，地址为 <https://landowang.github.io/cyber-bonsai/>。Pages 使用 `main` 分支的根目录，`.nojekyll` 让已构建的 HTML 和资源直接发布。将更新后的源文件和构建成品推送到 `main` 后，GitHub 会自动更新网站。
 
 ## 观景方式
 
