@@ -1,6 +1,6 @@
 # 赛博盆景 · Cyber Bonsai
 
-四幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
+五幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
 
 [在线进入赛博盆景](https://landowang.github.io/cyber-bonsai/) · [查看统一画廊效果图](docs/gallery.jpg)
 
@@ -11,6 +11,10 @@
 | **雪满江南** | **枫街秋声** |
 | [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/snowy-jiangnan/) | [![枫街秋声](scenes/autumn-avenue/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/autumn-avenue/) |
 | 粉墙黛瓦、石拱桥、乌篷船与漫天飞雪 | 红枫、金黄树冠、弯曲步道与街边车流 |
+
+[![静庭听叶](scenes/quiet-pavilion/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/quiet-pavilion/)
+
+**静庭听叶** · 灰瓦曲檐、暖木立柱、绿篱与缓缓落叶。留一座空亭，等一阵很轻的风。
 
 ## 打开盆景
 
@@ -49,6 +53,8 @@ python3 -m http.server 8080 --bind 127.0.0.1
 - **雪满江南**：三个视角、雪势滑杆、薄暮 / 雪夜、屋顶积雪、红伞行人、灯火与实时水面倒影。
 - **枫街秋声**：由太平洋西北秋日街景照片启发，提供全景、树下仰望、沿街漫步三个镜头，秋风滑杆、阴天 / 雨后夕照、灰褐树皮与弯曲分叉、铺展到步道上方的五裂枫叶、双向车流。树下镜头在手机上也保持站立高度。[查看树下视角](docs/autumn-canopy.jpg)。它是艺术化微缩场景，并非测绘复原；照片与其定位元数据不包含在仓库中。
 
+- **静庭听叶**：由木亭照片启发，保留曲面灰瓦、铜绿屋脊、成对木柱、白色椽头与敞开的亭身。提供庭院全景、檐下看木、亭中小坐三个视角，可调微风、缓慢落叶、暮色暖灯和截图保存。支持减少动态效果偏好，手机亭内镜头保持坐姿高度。[查看亭内视角](docs/pavilion-inside.jpg)。参考照片不包含在仓库中。
+
 ## 编辑与构建
 
 构建仅需 **Python 3.9+**，不需要 npm 安装、打包器或网络。源码和依赖分开保存，构建时合并成独立 HTML。
@@ -74,17 +80,18 @@ GitHub Actions 检查构建是否可复现、画廊链接与资源路径、独�
 ## 仓库结构
 
 ```text
-index.html                    # 四幅盆景的统一画廊
+index.html                    # 五幅盆景的统一画廊
 scenes/
   longyin-garden/              # 龙吟浮樱
   sunset-pyramids/             # 赤沙镜湖
   snowy-jiangnan/              # 雪满江南
   autumn-avenue/               # 枫街秋声
+  quiet-pavilion/              # 静庭听叶
     scene.js                  # 场景、动画和交互
     shell.html                # 页面与界面模板
     index.html                # 可直接打开的独立成品
     preview.jpg               # 实际浏览器效果图
-vendor/                       # 四个场景共用的固定版本依赖
+vendor/                       # 五个场景共用的固定版本依赖
 scripts/                      # 构建与校验
 .github/workflows/check.yml   # 自动检查
 ```
