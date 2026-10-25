@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Build the three offline HTML scenes using only the Python standard library."""
+"""Build the offline HTML scenes using only the Python standard library."""
 import argparse
 from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('longyin-garden', 'sunset-pyramids', 'snowy-jiangnan')
+SCENES = ('longyin-garden', 'sunset-pyramids', 'snowy-jiangnan', 'autumn-avenue')
 
 
 def render(slug):
@@ -39,7 +39,7 @@ def render(slug):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--scene', choices=SCENES, help='Build one scene instead of all three.')
+    parser.add_argument('--scene', choices=SCENES, help='Build one scene instead of all scenes.')
     parser.add_argument('--check', action='store_true', help='Fail if committed HTML differs from the build.')
     args = parser.parse_args()
     stale = []

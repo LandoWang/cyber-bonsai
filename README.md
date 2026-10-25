@@ -1,13 +1,16 @@
 # 赛博盆景 · Cyber Bonsai
 
-三幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
+四幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
 
 [在线进入赛博盆景](https://landowang.github.io/cyber-bonsai/) · [查看统一画廊效果图](docs/gallery.jpg)
 
-| 龙吟浮樱 | 赤沙镜湖 | 雪满江南 |
-| --- | --- | --- |
-| [![龙吟浮樱](scenes/longyin-garden/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/longyin-garden/) | [![赤沙镜湖](scenes/sunset-pyramids/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/sunset-pyramids/) | [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/snowy-jiangnan/) |
-| 苍龙、樱花浮岛、双檐凉亭与流水 | 金字塔、落日、湖面倒影与帆船 | 粉墙黛瓦、石拱桥、乌篷船与漫天飞雪 |
+| 龙吟浮樱 | 赤沙镜湖 |
+| --- | --- |
+| [![龙吟浮樱](scenes/longyin-garden/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/longyin-garden/) | [![赤沙镜湖](scenes/sunset-pyramids/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/sunset-pyramids/) |
+| 苍龙、樱花浮岛、双檐凉亭与流水 | 金字塔、落日、湖面倒影与帆船 |
+| **雪满江南** | **枫街秋声** |
+| [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/snowy-jiangnan/) | [![枫街秋声](scenes/autumn-avenue/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/autumn-avenue/) |
+| 粉墙黛瓦、石拱桥、乌篷船与漫天飞雪 | 红枫、金黄树冠、弯曲步道与街边车流 |
 
 ## 打开盆景
 
@@ -44,6 +47,7 @@ python3 -m http.server 8080 --bind 127.0.0.1
 - **龙吟浮樱**：四个视角、晨光 / 月夜、飘落樱花、锦鲤、瀑布、仙鹤与缓缓游动的巨龙。
 - **赤沙镜湖**：三个视角、夕阳滑杆、静水 / 微风、实时倒影、帆船与飞鸟。画面时刻是艺术化的光线控制，并非天文模拟。
 - **雪满江南**：三个视角、雪势滑杆、薄暮 / 雪夜、屋顶积雪、红伞行人、灯火与实时水面倒影。
+- **枫街秋声**：由太平洋西北秋日街景照片启发，提供全景、树下仰望、沿街漫步三个镜头，秋风滑杆、阴天 / 雨后夕照、五裂枫叶、双向车流。它是艺术化微缩场景，并非测绘复原；照片与其定位元数据不包含在仓库中。
 
 ## 编辑与构建
 
@@ -70,16 +74,17 @@ GitHub Actions 检查构建是否可复现、画廊链接与资源路径、独�
 ## 仓库结构
 
 ```text
-index.html                    # 三幅盆景的统一画廊
+index.html                    # 四幅盆景的统一画廊
 scenes/
   longyin-garden/              # 龙吟浮樱
   sunset-pyramids/             # 赤沙镜湖
   snowy-jiangnan/              # 雪满江南
+  autumn-avenue/               # 枫街秋声
     scene.js                  # 场景、动画和交互
     shell.html                # 页面与界面模板
     index.html                # 可直接打开的独立成品
     preview.jpg               # 实际浏览器效果图
-vendor/                       # 三个场景共用的固定版本依赖
+vendor/                       # 四个场景共用的固定版本依赖
 scripts/                      # 构建与校验
 .github/workflows/check.yml   # 自动检查
 ```
