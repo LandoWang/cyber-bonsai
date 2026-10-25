@@ -8,7 +8,7 @@ renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(deviceP
 const canvas=renderer.domElement;canvas.setAttribute('aria-label','微缩秋日街景：红枫覆盖弯曲人行道，落叶、草坪、常绿树与缓行车辆');
 const camera=new T.PerspectiveCamera(43,innerWidth/innerHeight,.08,1000);
 const hemi=new T.HemisphereLight(0xdce5e3,0x77715b,2.9);scene.add(hemi);
-const sun=new T.DirectionalLight(0xffedcc,2.05);sun.position.set(-22,36,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-33,right:33,top:33,bottom:-33,near:.1,far:100});sun.shadow.normalBias=.045;sun.shadow.bias=-.0002;scene.add(sun);
+const sun=new T.DirectionalLight(0xe4ebe7,1.15);sun.position.set(-22,36,12);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-33,right:33,top:33,bottom:-33,near:.1,far:100});sun.shadow.normalBias=.045;sun.shadow.bias=-.0002;scene.add(sun);
 const rim=new T.DirectionalLight(0xd2e3e5,1.5);rim.position.set(24,17,-22);scene.add(rim);
 const stone=new T.MeshStandardMaterial({roughness:.94}),wood=new T.MeshStandardMaterial({roughness:1}),metal=new T.MeshStandardMaterial({roughness:.55,metalness:.4}),glass=new T.MeshStandardMaterial({roughness:.24,metalness:.15}),leafMat=new T.MeshStandardMaterial({roughness:1,side:T.DoubleSide}),warmMat=new T.MeshStandardMaterial({emissive:0xffb355,emissiveIntensity:.5,roughness:.5}),roadMat=new T.MeshStandardMaterial({roughness:.85});
 const box=new T.BoxGeometry(1,1,1),dummy=new T.Object3D();let voxelCount=0;
@@ -44,30 +44,88 @@ const floor=new T.Mesh(new T.PlaneGeometry(3000,3000),new T.MeshStandardMaterial
 const outline=[[-.05,-.52],[.04,-.52],[.055,-.23],[.29,-.28],[.27,-.10],[.54,.04],[.38,.13],[.45,.33],[.25,.28],[.25,.49],[.12,.42],[0,.72],[-.12,.42],[-.25,.49],[-.25,.28],[-.45,.33],[-.38,.13],[-.54,.04],[-.27,-.1],[-.29,-.28],[-.055,-.23]];
 const leafShape=new T.Shape();outline.forEach(([x,y],i)=>i?leafShape.lineTo(x,y):leafShape.moveTo(x,y));leafShape.closePath();
 const leafGeo=new T.ExtrudeGeometry(leafShape,{depth:.045,bevelEnabled:false,steps:1});
-const crimson=[0x962f34,0xab3b3a,0xc34b43,0xce6050,0xb7463e,0xd77559,0x963a3c];
+const crownGeo=new T.ShapeGeometry(leafShape);
+const crimson=[0x9f3640,0xb7484b,0xc65551,0xcd6a5b,0xb44745,0xc77b60,0xa9454b];
 const amber=[0xd6a332,0xe0b440,0xc48d24,0xe6c359,0xbd7d26,0xd49a2c];
 const orange=[0xc27135,0xd18b3b,0xc94f30,0xdd9c42,0xb85733];
 const leafGroups=[];
-function leaves(items,parent=scene){const mesh=new T.InstancedMesh(leafGeo,leafMat,items.length);mesh.castShadow=true;mesh.receiveShadow=true;items.forEach((v,i)=>{dummy.position.set(v.x,v.y,v.z);dummy.rotation.set(v.rx,v.ry,v.rz);dummy.scale.setScalar(v.s);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);mesh.setColorAt(i,new T.Color(v.c));});mesh.computeBoundingSphere();parent.add(mesh);return mesh;}
-function maple(x,z,h,spread,palette,hero=false){const group=new T.Group();group.position.set(x,.35,z);scene.add(group);const b=new Batch(group),foliage=[],bark=[0x625e50,0x736c5a,0x827966,0x524f44];
- // A broad flared root and several grey trunks reproduce the photo's forked silhouette.
- for(let j=0;j<17;j++){const y=j*.25,w=(hero?.86:.59)*(1-j*.019);b.box(Math.sin(j*.08)*.16,y+.13,0,w,.27,w*.86,pick(bark));}
- for(let k=0;k<7;k++){const a=k*TAU/7+.2;beam(b,[0,.25,0],[Math.cos(a)*(hero?1.75:1.1),.03,Math.sin(a)*(hero?1.75:1.1)],.2,.26,0x6c6751);}
- for(let j=0;j<40;j++){const a=rnd()*TAU,y=rnd()*3.8,r=(hero?.43:.29)*(.98-y*.03);b.box(Math.sin(a)*r,y,Math.cos(a)*r,.055,.25+rnd()*.7,.055,pick([0x42483d,0x97917b,0x777564]),wood);}
- for(let k=0;k<8;k++){const a=k*TAU/8+.27+rnd()*.2,start=[.02,2.2+k*.16,0],end=[Math.cos(a)*spread*.57,h*(.62+rnd()*.15),Math.sin(a)*spread*.57];
-  const middle=[end[0]*.30,4.5+k*.08,end[2]*.3];beam(b,start,middle,hero?.43:.3,hero?.4:.28,pick(bark));beam(b,middle,end,.24,.24,pick(bark));
-  for(let j=0;j<4;j++){const aa=a+(j-1.5)*.38,rad=spread*(.64+rnd()*.37),tip=[Math.cos(aa)*rad,h*(.76+rnd()*.22)-Math.max(0,rad/spread-.8)*1.5,Math.sin(aa)*rad];
-   const join=new T.Vector3(...middle).lerp(new T.Vector3(...end),.60+j*.1);beam(b,join.toArray(),tip,.10,.11,pick(bark));
-   const small=[tip[0]+Math.cos(aa+.4)*.75,tip[1]+.65,tip[2]+Math.sin(aa+.4)*.75];beam(b,tip,small,.047,.054,0x544f42);
-   for(let n=0;n<(hero?150:112);n++){const az=rnd()*TAU,rr=Math.sqrt(rnd()),el=(rnd()-.5)*2,rx=1.3+rnd()*.5;const px=tip[0]+Math.cos(az)*rr*rx,py=tip[1]+el*(1.0-rr*.28),pz=tip[2]+Math.sin(az)*rr*rx;
-    foliage.push({x:px,y:py,z:pz,s:.24+rnd()*.23,rx:-Math.PI/2+(rnd()-.5)*1.15,ry:rnd()*TAU,rz:(rnd()-.5)*1.4,c:pick(palette)});
+function leaves(items,parent=scene,geometry=leafGeo){const mesh=new T.InstancedMesh(geometry,leafMat,items.length);mesh.castShadow=true;mesh.receiveShadow=true;items.forEach((v,i)=>{dummy.position.set(v.x,v.y,v.z);dummy.rotation.set(v.rx,v.ry,v.rz);dummy.scale.setScalar(v.s);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);mesh.setColorAt(i,new T.Color(v.c));});mesh.computeBoundingSphere();parent.add(mesh);return mesh;}
+// Generated bark stays offline and adds the grey, fissured surface in the reference.
+const barkCanvas=document.createElement('canvas');barkCanvas.width=128;barkCanvas.height=512;
+const barkCtx=barkCanvas.getContext('2d');barkCtx.fillStyle='#b4b2a4';barkCtx.fillRect(0,0,128,512);
+let barkSeed=81357;const barkRandom=()=>{barkSeed=(barkSeed*1664525+1013904223)>>>0;return barkSeed/4294967296;};
+for(let i=0;i<260;i++){const x=Math.floor(barkRandom()*128),y=Math.floor(barkRandom()*512),w=1+Math.floor(barkRandom()*4),h=12+barkRandom()*100;barkCtx.fillStyle=pick(['#85877b','#999b8d','#c2c1b1','#a7a99a']);barkCtx.fillRect(x,y,w,h);}
+for(let i=0;i<35;i++){let x=barkRandom()*128,y=barkRandom()*512;barkCtx.strokeStyle=i%3?'#777e72':'#626b62';barkCtx.lineWidth=i%4===0?2:1;barkCtx.beginPath();barkCtx.moveTo(x,y);for(let k=0;k<6;k++){x+=(barkRandom()-.5)*5;y+=6+barkRandom()*12;barkCtx.lineTo(x,y);}barkCtx.stroke();}
+const barkTexture=new T.CanvasTexture(barkCanvas);barkTexture.colorSpace=T.SRGBColorSpace;barkTexture.magFilter=T.NearestFilter;barkTexture.wrapS=barkTexture.wrapT=T.RepeatWrapping;
+const barkMat=new T.MeshStandardMaterial({map:barkTexture,roughness:1,vertexColors:true});
+class Limbs{
+ constructor(parent){this.parent=parent;this.items=[];}
+ segment(a,b,r,endR,c){this.items.push({a:a.clone(),b:b.clone(),r,endR,c});}
+ curve(a,b,c,startRadius,endRadius,color){
+  const path=new T.QuadraticBezierCurve3(new T.Vector3(...a),new T.Vector3(...b),new T.Vector3(...c));
+  const n=Math.max(4,Math.ceil(path.getLength()/.44));
+  for(let i=0;i<n;i++){const t=i/n,u=(i+1)/n;this.segment(path.getPoint(t),path.getPoint(u),mix(startRadius,endRadius,t),mix(startRadius,endRadius,u),color);}
+ }
+ finish(){
+  const positions=[],normals=[],uvs=[],colors=[];
+  for(const v of this.items){
+   const axis=v.b.clone().sub(v.a),length=axis.length(),color=new T.Color(v.c);
+   dummy.position.copy(v.a).add(v.b).multiplyScalar(.5);dummy.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),axis.clone().normalize());dummy.scale.set(1,1,1);dummy.updateMatrix();
+   const geometry=new T.CylinderGeometry(v.endR,v.r,length,7,1,true).toNonIndexed();
+   const uv=geometry.attributes.uv;
+   for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*TAU*v.r/1.3,(uv.getY(i)*length+v.a.y)/3);
+   geometry.applyMatrix4(dummy.matrix);
+   positions.push(...geometry.attributes.position.array);normals.push(...geometry.attributes.normal.array);uvs.push(...uv.array);
+   for(let i=0;i<geometry.attributes.position.count;i++)colors.push(color.r,color.g,color.b);
+   geometry.dispose();
+  }
+  const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(positions,3));geometry.setAttribute('normal',new T.Float32BufferAttribute(normals,3));geometry.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));geometry.setAttribute('color',new T.Float32BufferAttribute(colors,3));geometry.computeBoundingSphere();
+  const mesh=new T.Mesh(geometry,barkMat);mesh.castShadow=true;mesh.receiveShadow=true;this.parent.add(mesh);
+ }
+}
+function maple(x,z,h,spread,palette,hero=false){
+ const group=new T.Group();group.position.set(x,.35,z);scene.add(group);
+ const limbs=new Limbs(group),foliage=[],baseR=hero?.67:.36;
+ const bark=[0xb0aea1,0xc1bcb0,0xaaa99c,0xcac4b7];
+ limbs.curve([0,0,0],[.18,1.8,-.08],[.16,4.2,-.10],baseR,baseR*.56,0xb8b5a8);
+ for(let k=0;k<8;k++){const a=k*TAU/8+.2,length=hero?1.45:1.0;
+  limbs.curve([Math.cos(a)*length,.025,Math.sin(a)*length],[Math.cos(a)*.6,.16,Math.sin(a)*.6],[0,.9,0],.035,baseR*.56,0x9eaa8d);
+ }
+ // Stems diverge at different heights and taper through bent, asymmetric limbs.
+ for(let k=0;k<7;k++){
+  const a=k*TAU/7+.18+rnd()*.26,start=[.08,1.5+k*.32,-.03];
+  const extension=hero&&Math.cos(a)>0?1.32:1;
+  const end=[Math.cos(a)*spread*.66*extension,h*(.68+rnd()*.19),Math.sin(a)*spread*.62];
+  const bend=[Math.cos(a)*spread*.15,h*(.37+rnd()*.06),Math.sin(a)*spread*.16];
+  limbs.curve(start,bend,end,baseR*(.53+rnd()*.13),.06+rnd()*.025,pick(bark));
+  for(let j=0;j<5;j++){
+   const aa=a+(j-2)*.32,rad=spread*(.60+rnd()*.44),ex=hero&&Math.cos(aa)>0?1.32:1;
+   const tip=[Math.cos(aa)*rad*ex,h*(.67+rnd()*.32)-Math.max(0,rad/spread-.8)*1.8,Math.sin(aa)*rad];
+   const join=new T.Vector3(...bend).lerp(new T.Vector3(...end),.42+j*.10);
+   const mid=join.clone().lerp(new T.Vector3(...tip),.53);mid.y+=.22+rnd()*.6;
+   limbs.curve(join.toArray(),mid.toArray(),tip,.058+rnd()*.025,.016,pick(bark));
+   for(let q=0;q<3;q++){
+    const twig=new T.Vector3(...tip).add(new T.Vector3(Math.cos(aa+q-.9)*(.55+rnd()*.55),.12+rnd()*.52,Math.sin(aa+q-.9)*(.55+rnd()*.55)));
+    const twigStart=mid.clone().lerp(new T.Vector3(...tip),.64+q*.12);
+    limbs.curve(twigStart.toArray(),new T.Vector3(...tip).toArray(),twig.toArray(),.025,.008,0x919688);
+   }
+   // Layers of small clusters leave slivers of sky while joining the crown overhead.
+   for(let n=0;n<(hero?210:130);n++){
+    const az=rnd()*TAU,rr=Math.sqrt(rnd()),vertical=(rnd()-.5)*2,rx=hero?1.7:1.5;
+    const px=tip[0]+Math.cos(az)*rr*rx,py=tip[1]+vertical*(1.1-rr*.35),pz=tip[2]+Math.sin(az)*rr*rx;
+    foliage.push({x:px,y:py,z:pz,s:.19+rnd()*.20,rx:-Math.PI/2+(rnd()-.5)*1.45,ry:rnd()*TAU,rz:(rnd()-.5)*1.5,c:pick(palette)});
    }
   }
  }
- b.finish();const crown=new T.Group();group.add(crown);leaves(foliage,crown);leafGroups.push({g:crown,phase:rnd()*TAU,x,z,h,palette});return group;
+ // Inner clusters connect the outer branches without turning the crown into a shell.
+ for(let i=0;i<(hero?680:260);i++){const a=rnd()*TAU,r=Math.sqrt(rnd())*(hero?2.1:1.4);foliage.push({x:Math.cos(a)*r+(hero?.6:0),y:h*.86+(rnd()-.5)*2.0,z:Math.sin(a)*r,s:.2+rnd()*.16,rx:-Math.PI/2+(rnd()-.5)*1.4,ry:rnd()*TAU,rz:rnd()*TAU,c:pick(palette)});}
+ // Small lichen flecks follow the trunk surface instead of forming horizontal bands.
+ const lichen=new Batch(group);
+ for(let i=0;i<(hero?115:35);i++){const a=rnd()*TAU,y=rnd()*2.7,r=mix(baseR,baseR*.64,y/4.2);lichen.box(Math.sin(a)*r,y,Math.cos(a)*r,.018+rnd()*.065,.045+rnd()*.14,.025,pick([0x778278,0x909782,0xa8ad9a]),wood,[0,a,0]);}lichen.finish();
+ limbs.finish();const crown=new T.Group();group.add(crown);leaves(foliage,crown,crownGeo);leafGroups.push({g:crown,phase:rnd()*TAU,x,z,h,palette});return group;
 }
-maple(-5.6,12.6,13.8,5.8,crimson,true);
-maple(-4.15,.2,11.5,4.55,orange);
+maple(-5.6,12.6,14.7,6.6,crimson,true);
+maple(-4.15,.2,11.5,4.65,orange);
 maple(-5.35,-12.4,12.2,4.9,amber);
 maple(-15.1,-19.0,10,3.7,amber);
 // The right-hand evergreen wall balances the brilliant deciduous canopies.
@@ -120,11 +178,11 @@ for(let i=0;i<fallingMax;i++){const tree=leafGroups[i%3];drift.push({x:tree.x+(r
 let wind=.35,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,golden=false,auto=false,time=0,transition=null,viewName='all';
 function setWind(v){wind=v;falling.count=v===0?0:Math.round(15+v*(fallingMax-15));$('wind-label').textContent=v<.1?'无风':v<.55?'轻风':'秋风起';$('weather-desc').textContent=v<.1?'叶静枝闲':v<.55?'红叶缓落':'满街飞叶';}
 $('wind').oninput=e=>setWind(Number(e.target.value));setWind(wind);
-function setLight(){golden=!golden;hemi.intensity=golden?2.1:2.9;sun.intensity=golden?3.4:2.05;sun.color.set(golden?0xffc47e:0xffedcc);sun.position.set(golden?-30:-22,golden?17:36,12);rim.intensity=golden?.9:1.5;scene.background.set(golden?0xa99c82:0xadb6b1);scene.fog.color.copy(scene.background);floor.material.color.set(golden?0x999981:0xaab3ab);$('light').classList.toggle('active',golden);$('light').setAttribute('aria-pressed',String(golden));$('light').innerHTML=golden?icons.moon:icons.sun;$('dusk-label').textContent=golden?'雨后 · 夕照入林':'阴天 · 红叶正好';}
+function setLight(){golden=!golden;hemi.intensity=golden?2.1:2.9;sun.intensity=golden?3.4:1.15;sun.color.set(golden?0xffc47e:0xe4ebe7);sun.position.set(golden?-30:-22,golden?17:36,12);rim.intensity=golden?.9:1.5;scene.background.set(golden?0xa99c82:0xadb6b1);scene.fog.color.copy(scene.background);floor.material.color.set(golden?0x999981:0xaab3ab);$('light').classList.toggle('active',golden);$('light').setAttribute('aria-pressed',String(golden));$('light').innerHTML=golden?icons.moon:icons.sun;$('dusk-label').textContent=golden?'雨后 · 夕照入林':'阴天 · 红叶正好';}
 const target=new T.Vector3(0,3.5,0);let radius=76,theta=.50,phi=1.03;
-const presets={all:{fov:43,r:76,t:.50,p:1.03,target:new T.Vector3(0,3.5,0)},canopy:{fov:65,r:24,t:.05,p:1.80,target:new T.Vector3(-2.8,7.0,-1.8)},street:{fov:54,r:29,t:.10,p:1.50,target:new T.Vector3(-1.2,2.7,-7)}};
+const presets={all:{fov:43,r:76,t:.50,p:1.03,target:new T.Vector3(0,3.5,0)},canopy:{fov:65,r:22,t:.015,p:1.84,target:new T.Vector3(-2.8,8.0,-2.0)},street:{fov:54,r:29,t:.10,p:1.50,target:new T.Vector3(-1.2,2.7,-7)}};
 function setView(name){viewName=name;transition={start:performance.now(),from:{fov:camera.fov,r:radius,t:theta,p:phi,target:target.clone()},to:presets[name]};document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===name);b.setAttribute('aria-pressed',String(b.dataset.view===name));});$('view-label').textContent={all:'枫街全景',canopy:'树下抬头',street:'沿街漫步'}[name];}
-function updateCamera(){const r=radius*(viewName==='all'?Math.max(1,1.12/camera.aspect):Math.max(1,.60/camera.aspect));scene.fog.near=r+65;scene.fog.far=r+200;camera.position.set(target.x+r*Math.sin(phi)*Math.sin(theta),Math.max(.7,target.y+r*Math.cos(phi)),target.z+r*Math.sin(phi)*Math.cos(theta));camera.lookAt(target);}
+function updateCamera(){const r=radius*(viewName==='all'?Math.max(1,1.12/camera.aspect):Math.max(1,.60/camera.aspect));scene.fog.near=r+65;scene.fog.far=r+200;camera.position.set(target.x+r*Math.sin(phi)*Math.sin(theta),Math.max(1.95,target.y+(viewName==='all'?r:radius)*Math.cos(phi)),target.z+r*Math.sin(phi)*Math.cos(theta));camera.lookAt(target);}
 const pointers=new Map();let lastX=0,lastY=0,pinch=0,interaction=0;
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});lastX=e.clientX;lastY=e.clientY;transition=null;interaction=performance.now();});
 canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===2){const a=[...pointers.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinch)radius=T.MathUtils.clamp(radius*pinch/d,5,115);pinch=d;}else{const dx=e.clientX-lastX,dy=e.clientY-lastY;if(e.shiftKey||e.buttons===2){target.addScaledVector(new T.Vector3().setFromMatrixColumn(camera.matrix,0),-dx*radius*.001);target.addScaledVector(new T.Vector3().setFromMatrixColumn(camera.matrix,1),dy*radius*.001);}else{theta-=dx*.005;phi=T.MathUtils.clamp(phi+dy*.004,.20,1.95);}}lastX=e.clientX;lastY=e.clientY;interaction=performance.now();});
@@ -142,6 +200,6 @@ function animate(now){requestAnimationFrame(animate);const dt=Math.min(.06,(now-
  for(const tree of leafGroups){tree.g.rotation.z=Math.sin(time*.65+tree.phase)*wind*.009;tree.g.rotation.x=Math.cos(time*.43+tree.phase)*wind*.006;}
  for(let i=0;i<falling.count;i++){const f=drift[i],progress=(f.phase+time*f.v*(wind*.9+.025))%1;const x=f.x+Math.sin(progress*TAU+f.spin)*(.4+wind)+progress*wind*2,z=f.z+Math.sin(progress*4+f.spin)*.7,y=.43+(1-progress)*(f.h-1);dummy.position.set(x,y,z);dummy.scale.setScalar(f.s);dummy.rotation.set(-Math.PI/2+Math.sin(progress*9+f.spin),f.spin+progress*7,progress*9+f.spin);dummy.updateMatrix();falling.setMatrixAt(i,dummy.matrix);}falling.instanceMatrix.needsUpdate=true;
  for(const c of cars){const z=((c.z+time*c.speed+24)%48+48)%48-24;c.g.position.set(roadX(z)+c.lane,.27,z);c.g.rotation.y=roadHeading(z)+(c.speed<0?Math.PI:0);c.g.visible=Math.abs(z)<20.65;}
- updateCamera();renderer.render(scene,camera);frames++;if(now-fpsStart>2000){canvas.dataset.renderStats=JSON.stringify({voxels:voxelCount,mapleTrees:leafGroups.length,fallingLeaves:falling.count,fps:Math.round(frames*1000/(now-fpsStart)),view:viewName,golden,paused,wind});frames=0;fpsStart=now;}}
+ updateCamera();canvas.dataset.cameraView=transition?'moving':viewName;renderer.render(scene,camera);frames++;if(now-fpsStart>2000){canvas.dataset.renderStats=JSON.stringify({voxels:voxelCount,mapleTrees:leafGroups.length,fallingLeaves:falling.count,fps:Math.round(frames*1000/(now-fpsStart)),view:viewName,golden,paused,wind});frames=0;fpsStart=now;}}
 $('loading').classList.add('done');setTimeout(()=>$('loading').remove(),700);requestAnimationFrame(animate);
 })();
