@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENES = ('longyin-garden', 'sunset-pyramids', 'snowy-jiangnan', 'autumn-avenue', 'quiet-pavilion')
+SCENES = ('longyin-garden', 'sunset-pyramids', 'snowy-jiangnan', 'autumn-avenue', 'quiet-pavilion', 'space-needle')
 
 
 def render(slug):

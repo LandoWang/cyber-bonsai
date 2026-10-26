@@ -1,6 +1,6 @@
 # 赛博盆景 · Cyber Bonsai
 
-五幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
+六幅可以旋转、漫游、留图的体素风景。把一方小世界，放在浏览器里。
 
 [在线进入赛博盆景](https://landowang.github.io/cyber-bonsai/) · [查看统一画廊效果图](docs/gallery.jpg)
 
@@ -11,10 +11,9 @@
 | **雪满江南** | **枫街秋声** |
 | [![雪满江南](scenes/snowy-jiangnan/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/snowy-jiangnan/) | [![枫街秋声](scenes/autumn-avenue/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/autumn-avenue/) |
 | 粉墙黛瓦、石拱桥、乌篷船与漫天飞雪 | 红枫、金黄树冠、弯曲步道与街边车流 |
-
-[![静庭听叶](scenes/quiet-pavilion/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/quiet-pavilion/)
-
-**静庭听叶** · 灰瓦曲檐、暖木立柱、绿篱与缓缓落叶。留一座空亭，等一阵很轻的风。
+| **静庭听叶** | **云下太空针** |
+| [![静庭听叶](scenes/quiet-pavilion/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/quiet-pavilion/) | [![云下太空针](scenes/space-needle/preview.jpg)](https://landowang.github.io/cyber-bonsai/scenes/space-needle/) |
+| 灰瓦曲檐、暖木立柱、绿篱与缓缓落叶 | 太空针塔、金褐秋树、风动雕塑与银灰阴云 |
 
 ## 打开盆景
 
@@ -52,8 +51,8 @@ python3 -m http.server 8080 --bind 127.0.0.1
 - **赤沙镜湖**：三个视角、夕阳滑杆、静水 / 微风、实时倒影、帆船与飞鸟。画面时刻是艺术化的光线控制，并非天文模拟。
 - **雪满江南**：三个视角、雪势滑杆、薄暮 / 雪夜、屋顶积雪、红伞行人、灯火与实时水面倒影。
 - **枫街秋声**：由太平洋西北秋日街景照片启发，提供全景、树下仰望、沿街漫步三个镜头，秋风滑杆、阴天 / 雨后夕照、灰褐树皮与弯曲分叉、铺展到步道上方的五裂枫叶、双向车流。树下镜头在手机上也保持站立高度。[查看树下视角](docs/autumn-canopy.jpg)。它是艺术化微缩场景，并非测绘复原；照片与其定位元数据不包含在仓库中。
-
 - **静庭听叶**：由木亭照片启发，保留曲面灰瓦、铜绿屋脊、成对木柱、白色椽头与敞开的亭身。提供庭院全景、檐下看木、亭中小坐三个视角，可调微风、缓慢落叶、暮色暖灯和截图保存。支持减少动态效果偏好，手机亭内镜头保持坐姿高度。[查看亭内视角](docs/pavilion-inside.jpg)。参考照片不包含在仓库中。
+- **云下太空针**：由西雅图太空针塔照片启发。象牙白曲线支架、放射状底肋、玻璃观景台与金色升降电梯构成塔身，秋树和四叶风雕塑围绕广场。提供城市全景、树下仰望、云端近看三个镜头，秋风滑杆、阴天 / 蓝调灯火、暂停与截图。手机仰望视角保持地面高度。天空由本地着色器绘制，不依赖外部贴图。[查看仰望视角](docs/space-needle-photo.jpg)。场景为艺术化微缩，并非精确建筑模型；参考照片不包含在仓库中。
 
 ## 编辑与构建
 
@@ -80,18 +79,19 @@ GitHub Actions 检查构建是否可复现、画廊链接与资源路径、独�
 ## 仓库结构
 
 ```text
-index.html                    # 五幅盆景的统一画廊
+index.html                    # 六幅盆景的统一画廊
 scenes/
   longyin-garden/              # 龙吟浮樱
   sunset-pyramids/             # 赤沙镜湖
   snowy-jiangnan/              # 雪满江南
   autumn-avenue/               # 枫街秋声
   quiet-pavilion/              # 静庭听叶
+  space-needle/                # 云下太空针
     scene.js                  # 场景、动画和交互
     shell.html                # 页面与界面模板
     index.html                # 可直接打开的独立成品
     preview.jpg               # 实际浏览器效果图
-vendor/                       # 五个场景共用的固定版本依赖
+vendor/                       # 六个场景共用的固定版本依赖
 scripts/                      # 构建与校验
 .github/workflows/check.yml   # 自动检查
 ```
